@@ -114,16 +114,17 @@ round(total_sales*100/sum(total_sales) over(),2)  as percentage
  from cte1;
  
  #10
- with cte1 as (
+with cte1 as (
 SELECT p.division,p.product_code,p.product,sum(s.sold_quantity) as total_sold_quantity,
 dense_rank() over(partition by division order by sum(s.sold_quantity) desc) as rank_no
 FROM fact_sales_monthly s 
  JOIN dim_product p on s.product_code=p.product_code
- group by division,product)
+ where fiscal_year=2021
+ group by division,product,product_code)
  
  select * from cte1
  where rank_no in (1,2,3)
- 
+
  
 
 
